@@ -3,5 +3,6 @@
     public class ApiOptions
     {
         public string OpenWeatherMapApiKey { get; set; }
+        public string IconUrl { get; set; }
     }
 }
