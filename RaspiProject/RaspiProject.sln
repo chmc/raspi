@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrafanaAPI", "GrafanaAPI\GrafanaAPI.csproj", "{A768D178-C164-4898-B335-5D3DA8552580}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrafanaAPI", "GrafanaAPI\GrafanaAPI.csproj", "{A768D178-C164-4898-B335-5D3DA8552580}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrafanaAPI.Application.Core", "GrafanaAPI.Application.Core\GrafanaAPI.Application.Core.csproj", "{CD6E10CB-E944-4A66-B638-DA2608256504}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrafanaAPI.Infrastructure.IoC", "GrafanaAPI.Infrastructure.IoC\GrafanaAPI.Infrastructure.IoC.csproj", "{BCC2C41A-BB2C-4E99-8A80-C14DB0EBFF3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{A768D178-C164-4898-B335-5D3DA8552580}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A768D178-C164-4898-B335-5D3DA8552580}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A768D178-C164-4898-B335-5D3DA8552580}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD6E10CB-E944-4A66-B638-DA2608256504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD6E10CB-E944-4A66-B638-DA2608256504}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD6E10CB-E944-4A66-B638-DA2608256504}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD6E10CB-E944-4A66-B638-DA2608256504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCC2C41A-BB2C-4E99-8A80-C14DB0EBFF3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCC2C41A-BB2C-4E99-8A80-C14DB0EBFF3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCC2C41A-BB2C-4E99-8A80-C14DB0EBFF3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCC2C41A-BB2C-4E99-8A80-C14DB0EBFF3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

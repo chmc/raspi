@@ -1,3 +1,4 @@
+using GrafanaAPI.Infrastructure.IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,12 +27,18 @@ namespace GrafanaAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Application.Core.Options.ApiOptions>(
+                Configuration.GetSection("ApiOptions"));
             services.AddCors(); // Make sure you call this previous to AddMvc
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GrafanaAPI", Version = "v1" });
             });
+            services.AddHttpClient();
+
+            // Register dependencies
+            services = DependencyContainer.ConfigureServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
