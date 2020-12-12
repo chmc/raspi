@@ -9,6 +9,6 @@ namespace GrafanaAPI.Application.Core.Interfaces.Scrapers
         /// </summary>
         /// <param name="city"></param>
         /// <returns></returns>
-        Task GetCurrentWeatherForecastAsync(string city);
+        Task<string> GetCurrentWeatherForecastAsync(string city);
     }
 }

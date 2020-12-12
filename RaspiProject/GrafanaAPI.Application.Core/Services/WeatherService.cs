@@ -31,7 +31,7 @@ namespace GrafanaAPI.Application.Core.Services
         /// </summary>
         /// <param name="city"></param>
         /// <returns></returns>
-        public async Task GetCurrentWeatherForecastAsync(string city)
+        public async Task<string> GetCurrentWeatherForecastAsync(string city)
         {
             // Daily forecast for 7 days
             // https://openweathermap.org/api/one-call-api
@@ -64,7 +64,8 @@ namespace GrafanaAPI.Application.Core.Services
                 {
                     Date = data.Date,
                     Icon = string.Format(_options.Value.IconUrl, data.Weather[0].Icon),
-                    Temp = data.Temp.Day,
+                    Temp = Math.Round(data.Temp.Day),
+                    TempNight = Math.Round(data.Temp.Night),
                     RainProbability = data.Pop,
                     WindSpeed = data.WindSpeed,
                     WindDeg = data.WindDeg
@@ -79,21 +80,21 @@ namespace GrafanaAPI.Application.Core.Services
                 {
                     Date = data.Date,
                     Icon = string.Format(_options.Value.IconUrl, data.Weather[0].Icon),
-                    Temp = data.Temp,
+                    Temp = Math.Round(data.Temp),
                     RainProbability = data.Pop,
                     WindSpeed = data.WindSpeed,
                     WindDeg = data.WindDeg
                 });
             }
 
-            var html = "<center>";
+            var html = @"<center style=""background-color: #000; color: #fff; font-family: Arial, Helvetica, sans-serif;"">";
             foreach (var wd in daily)
             {
-                html += @$"<div style=""display: inline-block;""><span>{wd.Temp}</span><br><img src=""{wd.Icon}"" /><br><span>{wd.Date.DayOfWeek}</span></div>";
+                html += @$"<div style=""display: inline-block;""><span>{wd.Temp} / {wd.TempNight} &deg;C</span><br><img style=""object-fit: none; height: 80px;"" src=""{wd.Icon}"" /><br><span>{wd.Day}</span></div>";
             }
             html += "</center>";
 
-            var i = 0;
+            return html;
         }
 
         ///// <summary>
