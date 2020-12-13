@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -62,7 +63,7 @@ namespace GrafanaAPI.Application.Core.Services
             {
                 daily.Add(new WeatherData
                 {
-                    Date = data.Date,
+                    Date = data.Date.AddHours(_options.Value.UtcOffset),
                     Icon = string.Format(_options.Value.IconUrl, data.Weather[0].Icon),
                     Temp = Math.Round(data.Temp.Day),
                     TempNight = Math.Round(data.Temp.Night),
@@ -74,11 +75,11 @@ namespace GrafanaAPI.Application.Core.Services
 
             // Get hourly forecast
             var hourly = new List<WeatherData>();
-            foreach (var data in response.Hourly)
+            foreach (var data in response.Hourly.Take(8))
             {
                 hourly.Add(new WeatherData
                 {
-                    Date = data.Date,
+                    Date = data.Date.AddHours(_options.Value.UtcOffset),
                     Icon = string.Format(_options.Value.IconUrl, data.Weather[0].Icon),
                     Temp = Math.Round(data.Temp),
                     RainProbability = data.Pop,
@@ -93,13 +94,24 @@ namespace GrafanaAPI.Application.Core.Services
             //    html += @$"<div style=""display: inline-block;""><span>{wd.Temp} / {wd.TempNight} &deg;C</span><br><img style=""object-fit: none; height: 80px;"" src=""{wd.Icon}"" /><br><span>{wd.Day}</span></div>";
             //}
             //html += "</center>";
+            
+            var html = @"<center style=""background-color: #000; color: #fff; font-family: Arial, Helvetica, sans-serif;""><table>";
+            // 7h forecast
+            html += "<tr>";
+            foreach (var wd in hourly)
+            {
+                html += @$"<td><div><center>{wd.Temp}&deg;</center></div><div><center><img style=""object-fit: none; height: 80px;"" src=""{wd.Icon}"" /></center></div><div><center>{wd.Date.Hour}</center></div></td>";
+            }
+            html += "</tr>";
 
-            var html = @"<center style=""background-color: #000; color: #fff; font-family: Arial, Helvetica, sans-serif;""><table><tr>";
+            // 7 day forecast
+            html += "<tr>";
             foreach (var wd in daily)
             {
                 html += @$"<td><div><center>{wd.Temp}&deg; / {wd.TempNight}&deg;</center></div><div><center><img style=""object-fit: none; height: 80px;"" src=""{wd.Icon}"" /></center></div><div><center>{wd.Day}</center></div></td>";
             }
-            html += "</tr></table></center>";
+            html += "</tr>";
+            html += "</table></center>";
 
             return html;
         }
