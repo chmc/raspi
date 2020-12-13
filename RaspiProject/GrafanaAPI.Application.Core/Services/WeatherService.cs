@@ -87,12 +87,19 @@ namespace GrafanaAPI.Application.Core.Services
                 });
             }
 
-            var html = @"<center style=""background-color: #000; color: #fff; font-family: Arial, Helvetica, sans-serif;"">";
+            //var html = @"<center style=""background-color: #000; color: #fff; font-family: Arial, Helvetica, sans-serif;"">";
+            //foreach (var wd in daily)
+            //{
+            //    html += @$"<div style=""display: inline-block;""><span>{wd.Temp} / {wd.TempNight} &deg;C</span><br><img style=""object-fit: none; height: 80px;"" src=""{wd.Icon}"" /><br><span>{wd.Day}</span></div>";
+            //}
+            //html += "</center>";
+
+            var html = @"<center style=""background-color: #000; color: #fff; font-family: Arial, Helvetica, sans-serif;""><table><tr>";
             foreach (var wd in daily)
             {
-                html += @$"<div style=""display: inline-block;""><span>{wd.Temp} / {wd.TempNight} &deg;C</span><br><img style=""object-fit: none; height: 80px;"" src=""{wd.Icon}"" /><br><span>{wd.Day}</span></div>";
+                html += @$"<td><div><center>{wd.Temp}&deg; / {wd.TempNight}&deg;</center></div><div><center><img style=""object-fit: none; height: 80px;"" src=""{wd.Icon}"" /></center></div><div><center>{wd.Day}</center></div></td>";
             }
-            html += "</center>";
+            html += "</tr></table></center>";
 
             return html;
         }
