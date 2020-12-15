@@ -101,7 +101,7 @@ namespace GrafanaAPI.Application.Core.Services
             //html += @"<td><center><img src=""https://img.icons8.com/material-outlined/344/ffffff/clock--v1.png"" width=""48""/></center></td>";
             foreach (var wd in hourly)
             {
-                html += @$"<td><div><center>{wd.Date.Hour}: {wd.Temp}&deg;</center></div><div><center><img src=""{wd.Icon}"" /></center></div></td>";
+                html += @$"<td><div><b><center>{wd.Date.Hour}: {wd.Temp}&deg;</center></b></div><div><center><img src=""{wd.Icon}"" /></center></div></td>";
             }
             html += "</tr>";
 
@@ -110,7 +110,7 @@ namespace GrafanaAPI.Application.Core.Services
             //html += @"<td><center><img src=""https://img.icons8.com/metro/344/ffffff/calendar.png"" width=""48""/></center></td>";
             foreach (var wd in daily)
             {
-                html += @$"<td><div><center><img src=""{wd.Icon}"" /></center></div><div><center>{wd.Temp}&deg; / {wd.TempNight}&deg;</center></div><div><center>{wd.Day}</center></div></td>";
+                html += @$"<td><div><center><img src=""{wd.Icon}"" /></center></div><div><b><center>{wd.Temp}&deg; / {wd.TempNight}&deg;</center></b></div><div><center>{wd.Day}</center></div></td>";
             }
             html += "</tr>";
             html += "</table></center>";
