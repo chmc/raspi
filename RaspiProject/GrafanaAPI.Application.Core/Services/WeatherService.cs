@@ -67,7 +67,7 @@ namespace GrafanaAPI.Application.Core.Services
                     Icon = string.Format(_options.Value.IconUrl, data.Weather[0].Icon),
                     Temp = Math.Round(data.Temp.Day),
                     TempNight = Math.Round(data.Temp.Night),
-                    RainProbability = data.Pop,
+                    RainProbability = Math.Round(data.Pop * 100),
                     WindSpeed = data.WindSpeed,
                     WindDeg = data.WindDeg
                 });
@@ -82,7 +82,7 @@ namespace GrafanaAPI.Application.Core.Services
                     Date = data.Date.AddHours(_options.Value.UtcOffset),
                     Icon = string.Format(_options.Value.IconUrl, data.Weather[0].Icon),
                     Temp = Math.Round(data.Temp),
-                    RainProbability = data.Pop,
+                    RainProbability = Math.Round(data.Pop * 100),
                     WindSpeed = data.WindSpeed,
                     WindDeg = data.WindDeg
                 });
@@ -101,7 +101,8 @@ namespace GrafanaAPI.Application.Core.Services
             //html += @"<td><center><img src=""https://img.icons8.com/material-outlined/344/ffffff/clock--v1.png"" width=""48""/></center></td>";
             foreach (var wd in hourly)
             {
-                html += @$"<td><div><b><center>{wd.Date.Hour}: {wd.Temp}&deg;</center></b></div><div><center><img src=""{wd.Icon}"" /></center></div></td>";
+                // <img src=""https://img.icons8.com/ios-glyphs/344/ffffff/drop-of-blood.png"" height=""15"" /> 
+                html += @$"<td><div><b><center>{wd.Date.Hour}: {wd.Temp}&deg; {wd.RainProbability}%</center></b></div><div><center><img src=""{wd.Icon}"" /></center></div></td>";
             }
             html += "</tr>";
 
@@ -110,7 +111,8 @@ namespace GrafanaAPI.Application.Core.Services
             //html += @"<td><center><img src=""https://img.icons8.com/metro/344/ffffff/calendar.png"" width=""48""/></center></td>";
             foreach (var wd in daily)
             {
-                html += @$"<td><div><center><img src=""{wd.Icon}"" /></center></div><div><b><center>{wd.Temp}&deg; / {wd.TempNight}&deg;</center></b></div><div><center>{wd.Day}</center></div></td>";
+                //  <img src=""https://img.icons8.com/ios-glyphs/344/ffffff/drop-of-blood.png"" height=""15"" /> 
+                html += @$"<td><div><center><img src=""{wd.Icon}"" /></center></div><div><b><center>{wd.Temp}&deg; / {wd.TempNight}&deg; {wd.RainProbability}%</center></b></div><div><center>{wd.Day}</center></div></td>";
             }
             html += "</tr>";
             html += "</table></center>";
