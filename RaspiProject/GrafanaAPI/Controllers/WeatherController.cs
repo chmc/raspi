@@ -8,22 +8,25 @@ namespace GrafanaAPI.Controllers
     [Route("[controller]")]
     public class WeatherController : Controller
     {
-        private readonly IWeatherService _forecaWeatherScraper;
+        private readonly IWeatherService _weatherService;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="forecaWeatherScraper"></param>
-        public WeatherController(IWeatherService forecaWeatherScraper)
+        /// <param name="weatherService"></param>
+        public WeatherController(IWeatherService weatherService)
         {
-            _forecaWeatherScraper = forecaWeatherScraper;
+            _weatherService = weatherService;
         }
 
+        /// <summary>
+        /// Return forecast html in xml file
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
-            var html = await _forecaWeatherScraper.GetCurrentWeatherForecastAsync("Herttoniemenranta");
+            var html = await _weatherService.GetCurrentWeatherForecastAsync("Herttoniemenranta");
 
-            //var html = @"<center> <img src=""http://grafana.org/assets/img/logo_new_transparent_200x48.png"" /> </center><p>Terveisiä APIsta</p>";
             var contentType = "text/xml";
             var content = html;
             var bytes = Encoding.UTF8.GetBytes(content);
