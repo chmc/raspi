@@ -38,30 +38,30 @@ namespace GrafanaAPI.Application.Core.Services
             // https://openweathermap.org/api/one-call-api
             // https://api.openweathermap.org/data/2.5/onecall?lat=60.1695&lon=24.9355&exclude=current,minutely,hourly,alerts&appid=32ccf0c3b90b5e7ef5c93125af02611e
 
-            // Convert unix time to datetime
-            // DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(1000);
-
             var url = $"https://api.openweathermap.org/data/2.5/onecall?lat=60.1695&lon=24.9355&exclude=current,minutely,alerts&units=metric&appid={_options.Value.OpenWeatherMapApiKey}";
             var json = await _httpClient.GetStringAsync(url);
             var response = JsonConvert.DeserializeObject<WeatherDataDto>(json);
 
-            var dailyData = response.Daily[1];
-            var dailyIconUrl = string.Format(_options.Value.IconUrl, dailyData.Weather[0].Icon);
-            var dailyTemperature = dailyData.Temp;
-            var dailyDate = dailyData.Date;
-            var dailyRainProbability = dailyData.Pop;
-
-            var hourdata = response.Hourly[0];
-            var hourIconUrl = string.Format(_options.Value.IconUrl, hourdata.Weather[0].Icon);
-            var hourTemperature = hourdata.Temp;
-            var hourDate = hourdata.Date;
-            var hourRainProbability = hourdata.Pop;
+            // Get hourly forecast
+            var hourlyList = new List<WeatherData>();
+            foreach (var data in response.Hourly.Take(8))
+            {
+                hourlyList.Add(new WeatherData
+                {
+                    Date = data.Date.AddHours(_options.Value.UtcOffset),
+                    Icon = string.Format(_options.Value.IconUrl, data.Weather[0].Icon),
+                    Temp = Math.Round(data.Temp),
+                    RainProbability = Math.Round(data.Pop * 100),
+                    WindSpeed = data.WindSpeed,
+                    WindDeg = data.WindDeg
+                });
+            }
 
             // Get daily forecast
-            var daily = new List<WeatherData>();
+            var dailyList = new List<WeatherData>();
             foreach (var data in response.Daily)
             {
-                daily.Add(new WeatherData
+                dailyList.Add(new WeatherData
                 {
                     Date = data.Date.AddHours(_options.Value.UtcOffset),
                     Icon = string.Format(_options.Value.IconUrl, data.Weather[0].Icon),
@@ -73,45 +73,19 @@ namespace GrafanaAPI.Application.Core.Services
                 });
             }
 
-            // Get hourly forecast
-            var hourly = new List<WeatherData>();
-            foreach (var data in response.Hourly.Take(8))
-            {
-                hourly.Add(new WeatherData
-                {
-                    Date = data.Date.AddHours(_options.Value.UtcOffset),
-                    Icon = string.Format(_options.Value.IconUrl, data.Weather[0].Icon),
-                    Temp = Math.Round(data.Temp),
-                    RainProbability = Math.Round(data.Pop * 100),
-                    WindSpeed = data.WindSpeed,
-                    WindDeg = data.WindDeg
-                });
-            }
-
-            //var html = @"<center style=""background-color: #000; color: #fff; font-family: Arial, Helvetica, sans-serif;"">";
-            //foreach (var wd in daily)
-            //{
-            //    html += @$"<div style=""display: inline-block;""><span>{wd.Temp} / {wd.TempNight} &deg;C</span><br><img style=""object-fit: none; height: 80px;"" src=""{wd.Icon}"" /><br><span>{wd.Day}</span></div>";
-            //}
-            //html += "</center>";
-            
             var html = @"<center style=""background-color: #000; color: #fff; font-family: Arial, Helvetica, sans-serif;""><table>";
             // 7h forecast
             html += "<tr>";
-            //html += @"<td><center><img src=""https://img.icons8.com/material-outlined/344/ffffff/clock--v1.png"" width=""48""/></center></td>";
-            foreach (var wd in hourly)
+            foreach (var wd in hourlyList)
             {
-                // <img src=""https://img.icons8.com/ios-glyphs/344/ffffff/drop-of-blood.png"" height=""15"" /> 
                 html += @$"<td><div><b><center>{wd.Date.Hour}: {wd.Temp}&deg; {wd.RainProbability}%</center></b></div><div><center><img src=""{wd.Icon}"" /></center></div></td>";
             }
             html += "</tr>";
 
             // 7 day forecast
             html += "<tr>";
-            //html += @"<td><center><img src=""https://img.icons8.com/metro/344/ffffff/calendar.png"" width=""48""/></center></td>";
-            foreach (var wd in daily)
+            foreach (var wd in dailyList)
             {
-                //  <img src=""https://img.icons8.com/ios-glyphs/344/ffffff/drop-of-blood.png"" height=""15"" /> 
                 html += @$"<td><div><center><img src=""{wd.Icon}"" /></center></div><div><b><center>{wd.Temp}&deg; / {wd.TempNight}&deg; {wd.RainProbability}%</center></b></div><div><center>{wd.Day}</center></div></td>";
             }
             html += "</tr>";
@@ -119,30 +93,5 @@ namespace GrafanaAPI.Application.Core.Services
 
             return html;
         }
-
-        ///// <summary>
-        ///// Get current weather for given city
-        ///// </summary>
-        ///// <param name="city"></param>
-        ///// <returns></returns>
-        //public async Task GetCurrentWeatherForecastAsync(string city)
-        //{
-        //    // Daily forecast for 7 days
-        //    // https://openweathermap.org/api/one-call-api
-        //    // https://api.openweathermap.org/data/2.5/onecall?lat=60.1695&lon=24.9355&exclude=current,minutely,hourly,alerts&appid=32ccf0c3b90b5e7ef5c93125af02611e
-
-        //    // Convert unix time to datetime
-        //    // DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(1000);
-
-        //    var json = await _httpClient.GetStringAsync($"https://api.openweathermap.org/data/2.5/forecast?q=Helsinki&appid={_options.Value.OpenWeatherMapApiKey}&units=metric&lang=fi");
-        //    var response = JsonConvert.DeserializeObject<WeatherData3hDto>(json);
-        //    var data = response.List[0];
-        //    var iconUrl = string.Format(_options.Value.IconUrl, data.Weather[0].Icon);
-        //    var temperature = data.Main.Temp;
-        //    var date = data.DtTxt;
-        //    var rainProbability = data.Pop;
-
-        //    var i = 0;
-        //}
     }
 }
